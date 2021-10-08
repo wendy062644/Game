@@ -48,11 +48,16 @@ int Change()
 int Right()
 {
 	if(r == 0){return 0;}
-	if(map[High][11-r] == 1 || map[High+1][11-r] == 3){return 0;}
-	r--; l++;
 	for(int a = 1; 21 > a; a++)
 	{
-		for(int b = 10; b > 0; b--)
+		for(int b = 11; b > 1; b--)
+		{
+			if(map[a][b] == 2){if(map[a][b+1] != 0){return 0;}break;}
+		}
+	}
+	for(int a = 1; 21 > a; a++)
+	{
+		for(int b = 11; b >= 1; b--)
 		{
 			if(map[a][b] == 2){
 				map[a][b+1] = 2;
@@ -60,19 +65,20 @@ int Right()
 			}
 		}
 	}
+	r--; l++;
+	cout << l << r;
 }
 
 int Left(){
 	if(l == 0){return 0;}
-	for(int a = High; High+2 > a; a++)
+	for(int a = 1; 20 > a; a++)
 	{
-		for(int b = l; l+4 > b; b++)
+		for(int b = 1; 11 >= b; b++)
 		{
-			if(map[a][b] == 2){if(map[a][b-1] != 0){cout << a << b << endl;return 0;}break;}
+			if(map[a][b] == 2){if(map[a][b-1] != 0){return 0;}break;}
 		}
 	}
-	l--; r++;
-	for(int a = 1; 21 > a; a++)
+	for(int a = 1; 20 > a; a++)
 	{
 		for(int b = 1; 11 > b; b++)
 		{
@@ -82,6 +88,8 @@ int Left(){
 			}
 		}
 	}
+	l--; r++;
+	cout << l << r;
 }
 
 void Remove(){
@@ -127,9 +135,9 @@ void Set(int x, int y);
 
 void Down(){
 	int d = 0;
-	for(int a = 20; a > 0; a--)
+	for(int a = High+1; a >= High; a--)
 	{
-		for(int b = 1; 11 > b; b++)
+		for(int b = l; 11-r > b; b++)
 		{
 			if((map[a][b] == 2&&(map[a+1][b] == 1||map[a+1][b] == 3)) || d == 1){
 				d = 1;
@@ -141,12 +149,15 @@ void Down(){
 					}
 				}
 				check = 1;
+				break;
 			}
-			if(map[a][b] == 2)
-			{
-				map[a+1][b] = 2;
-				map[a][b] = 0;
-			}
+		}
+	}
+	for(int a = High+1; a >= High; a--)
+	{
+		for(int b = l; 11-r > b; b++)
+		{
+			if(map[a][b] == 2){map[a+1][b] = 2; map[a][b] = 0;}
 		}
 	}
 }
@@ -276,8 +287,8 @@ int main(){
 			Sleep(10);
 		}
 		
-		High++;
 		Down();
+		High++;
 		Remove();
 		}
 		
