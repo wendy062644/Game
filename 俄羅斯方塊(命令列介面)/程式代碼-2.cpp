@@ -38,6 +38,7 @@ int check = 1; //確認是否結束一個方塊
 int r, l; //判斷是否最左或最右 
 int BlockNum = 0;
 int High = 0;
+void Print();
 
 int Change()
 {
@@ -63,7 +64,13 @@ int Right()
 
 int Left(){
 	if(l == 0){return 0;}
-	if(map[High][l-1] == 3 || map[High+1][l-1] == 3){return 0;}
+	for(int a = High; High+2 > a; a++)
+	{
+		for(int b = l; l+4 > b; b++)
+		{
+			if(map[a][b] == 2){if(map[a][b-1] != 0){cout << a << b << endl;return 0;}break;}
+		}
+	}
 	l--; r++;
 	for(int a = 1; 21 > a; a++)
 	{
@@ -113,6 +120,7 @@ void Remove(){
 			break;
 	}
 	tt += n;
+	Print();
 }
 
 void Set(int x, int y);
@@ -232,7 +240,7 @@ int main(){
 	
 	while(1){
 		if(check == 1){
-			High = 19;
+			High = 1;
 			Create();
 			Copy();
 			check = 0;}
@@ -242,6 +250,7 @@ int main(){
 		{
 			if(time == 31){break;}
 			time++;
+			Print();
 			if(_kbhit())
 			{
 				char ch = getch();
@@ -258,19 +267,20 @@ int main(){
 						break;
 					case 80: //下箭頭，加速下降 
 						Down();
+						High++;
 						break;
 				}
+				Print();
+				Remove();
 			}
-			Print();
 			Sleep(10);
 		}
 		
-		High--;
+		High++;
 		Down();
 		Remove();
-		Print();
 		}
-	
+		
 	return 0;
 }
 
