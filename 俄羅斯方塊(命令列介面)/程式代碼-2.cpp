@@ -40,6 +40,11 @@ int BlockNum = 0;
 int High = 0;
 void Print();
 
+void GameOver(){
+	system("cls");
+	cout << endl << "     | Game Over |" << endl << "     |獲得分數: " << score << "|" << endl << "     |消除總數: " << tt << "|" <<  endl;
+}
+
 int Change()
 {
 	
@@ -162,14 +167,16 @@ void Down(){
 	}
 }
 
-void Copy(){
+int Copy(){
 	for(int a = 0; 2 > a; a++)
 	{
 		for(int b = 0; 4 > b; b++)
 		{
-			map[a+1][b+4] = block[a][b];
+			if(map[a+1][b+4] == 3){return 1;}
+			if(block[a][b] == 2){map[a+1][b+4] = block[a][b];}
 		} 
 	}
+	return 0;
 }
 
 void Create()
@@ -253,7 +260,7 @@ int main(){
 		if(check == 1){
 			High = 1;
 			Create();
-			Copy();
+			if(Copy()){GameOver(); break;}
 			check = 0;}
 		
 		int time = 0;
