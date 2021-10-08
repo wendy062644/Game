@@ -47,7 +47,7 @@ int Change()
 int Right()
 {
 	if(r == 0){return 0;}
-	if(map[High][r+1] == 1 || map[High+1][r+1] == 3){return 0;}
+	if(map[High][11-r] == 1 || map[High+1][11-r] == 3){return 0;}
 	r--; l++;
 	for(int a = 1; 21 > a; a++)
 	{
