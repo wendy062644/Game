@@ -371,7 +371,7 @@ int Left(){
 	l--; r++;
 }
 
-void Remove(){
+int Remove(){
 	int n = 0;
 	for(int a = 1; 21 > a; a++)
 	{
@@ -407,6 +407,27 @@ void Remove(){
 			break;
 	}
 	tt += n;
+	Print();
+	if(n > 0)
+	{
+		while(1)
+		{
+			int z = 1; //判斷場上是否全無 
+			for(int a = 19; a >= 1; a--)
+			{
+				for(int b = 1; 10 >= b; b++)
+				{
+					if(map[a][b] == 3){z = 0; map[a+1][b] = 3;map[a][b] = 0; Set(b*2, a+1); cout << "□"; Set(b*2, a); cout << "  ";}
+				}
+			}
+			Print();
+			if(z == 1){break;}
+			for(int b = 1; 10 >= b; b++)
+			{
+				if(map[20][b] == 3){return 0;}
+			}
+		}
+	} 
 }
 
 void Down(){
