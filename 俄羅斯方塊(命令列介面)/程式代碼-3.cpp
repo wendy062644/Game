@@ -39,9 +39,33 @@ int check = 1; //確認是否結束一個方塊
 int r, l; //判斷是否最左或最右 
 int BlockNum = 0;
 int High = 0; //紀錄高度，減少計算 
+int game = 0;
 float Time = 0; //計算時間 
 void Print();
 void Set(int x, int y);
+
+void Lobby(){
+	int choice = 0;
+	cout << "       選擇遊戲難度  " << endl;
+	cout << "     ----------------" << endl;
+	cout << "     |  1 簡單模式  |" << endl;
+	cout << "     |  2 普通模式  |" << endl;
+	cout << "     |  3 困難模式  |" << endl;
+	cout << "     ----------------" << endl;
+	cin >> choice;
+	switch(choice)
+	{
+		case 1:
+			game = 35;
+			break;
+		case 2:
+			game = 25;
+			break;
+		case 3:
+			game = 35;
+			break;
+	}
+}
 
 void GameOver(){
 	system("cls");
@@ -272,7 +296,7 @@ void Print(){
 }
 
 int main(){
-	
+	Lobby();
 	while(1){
 		if(check == 1){
 			High = 1;
@@ -284,9 +308,9 @@ int main(){
 		float time1 = 0;
 		while(1)
 		{
-			if(time1 == 25){break;}
+			if(time1 == game){break;}
 			time1++;
-			Time = (1000-time1*40)/1000;
+			Time = (game-time1)/25;
 			Set(36, 8);
 			cout << fixed << setprecision(1) << Time << "s";
 			if(_kbhit())
@@ -307,11 +331,13 @@ int main(){
 						break;
 					case 80: //下箭頭，加速下降 
 						Down();
+						time1 = 0;
 						High++;
 						break;
 				}
 				Remove();
 			}
+			if(High == 20){break;}
 			Sleep(40);
 		}
 		
