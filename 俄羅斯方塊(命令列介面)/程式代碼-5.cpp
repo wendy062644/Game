@@ -599,19 +599,23 @@ void Print(){
 			}
 		}
 	}
-		Set(36, 9);cout << last;
-		Set(36, 10);cout << score;
-		Set(36, 11);cout << tt;
+		Set(36, 8);cout << last;
+		Set(36, 9);cout << score;
+		Set(36, 10);cout << tt;
 }
 
 int main(){
 	Lobby();
-	Create();
+	Create(); 
 	Set(24, 1);cout << "  下一個方塊";
-	Set(24, 8);cout << "  剩餘時間: ";
-	Set(24, 9);cout << "  上次得分: ";
-	Set(24, 10);cout << "    總分數: ";
-	Set(24, 11);cout << "    消除數: ";
+	Set(24, 7);cout << "  剩餘時間: ";
+	Set(24, 8);cout << "  上次得分: ";
+	Set(24, 9);cout << "    總分數: ";
+	Set(24, 10);cout << "    消除數: ";
+	Set(24, 12);cout << "   ↓加速下降";
+	Set(24, 14);cout << "   ←往左移動";
+	Set(24, 16);cout << "   →往右移動";
+	Set(24, 18);cout << "   ↑切換型態";
 	while(1){
 		if(check == 1){
 			mode = 1;
@@ -627,7 +631,7 @@ int main(){
 			if(time1 == game){break;}
 			time1++;
 			Time = (game-time1)/25;
-			Set(36, 8);
+			Set(36, 7);
 			cout << fixed << setprecision(1) << Time << "s";
 			if(_kbhit())
 			{
