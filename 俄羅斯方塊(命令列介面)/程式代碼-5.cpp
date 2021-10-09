@@ -393,14 +393,20 @@ int Remove(){
 		case 1:
 			score += 100;
 			last = 100;
+			Set(39, 8);
+			cout << " ";
 			break;
 		case 2:
 			score += 300;
 			last = 300;
+			Set(39, 8);
+			cout << " ";
 			break;
 		case 3:
 			score += 600;
 			last = 600;
+			Set(39, 8);
+			cout << " ";
 			break;
 		case 4:
 			score += 1000;
