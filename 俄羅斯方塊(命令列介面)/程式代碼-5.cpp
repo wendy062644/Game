@@ -646,7 +646,8 @@ int main(){
 				switch(ch)
 				{
 					case 32: //空白鍵、換型態
-						Change(); 
+						Change();
+						break;
 					case 72: //上箭頭 ，換型態 
 						Change();
 						break;
