@@ -1,9 +1,14 @@
 #include <windows.h>
 #include<time.h>
 
-int g_arrBackground[20][10] = {0}; //éŠæˆ²æ ¼å­ 
+#define DEF_TIMER1 1234
 
-int g_tetris[2][4] = {0}; //æ–¹å¡Šæ ¼å­ 
+int Background[20][10] = {0}; //¹CÀ¸®æ¤l 
+
+int g_tetris[2][4] = {0}; //¤è¶ô®æ¤l 
+
+int g_nLine = -1;
+int g_nList = -1;
 
 LRESULT CALLBACK WindowProc(
 	HWND hWnd,
@@ -12,15 +17,44 @@ LRESULT CALLBACK WindowProc(
 	LPARAM lParam
 );
 
-void OnPaint(HDC hDC); //é¡¯ç¤ºç•«é¢ 
+void OnPaint(HDC hDC); //Åã¥Üµe­± 
 
-void DrawBlock(HDC hDC); //é¡¯ç¤ºæ–¹å¡Š 
+void DrawBlock(HDC hDC); //Åã¥Ü¤è¶ô 
 
-void OnCreate(); //ç”Ÿæˆæ–¹å¡Š
+void OnCreate(); //¥Í¦¨¤è¶ô
 
-void CreateBlock(); //éš¨æ©Ÿç”¢ç”Ÿæ–¹å¡Š
+void CreateBlock(); //ÀH¾÷²£¥Í¤è¶ô
 
 void Copy();
+
+void Return(HWND hWnd);
+
+void Left(HWND hWnd);
+
+void Right(HWND hWnd);
+
+void Up(HWND hWnd);
+
+void Down(HWND hWnd);
+
+void Timer(HWND hWnd);
+
+void SqareDown()
+{
+	int i = 0;
+	int j = 0;
+	for (i = 19; i >= 0; i--)
+	{
+		for (j = 0; j < 10; j++)
+		{
+			if (1 == Background[i][j])
+			{
+				Background[i + 1][j] = Background[i][j];
+				Background[i][j] = 0;
+			}
+		}
+	}
+}
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
 	switch(Message) {
@@ -38,8 +72,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 	
-	
-	
 	TCHAR szAPPClassName[] = TEXT("123");
 	
 	WNDCLASS wc = {0};
@@ -55,7 +87,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	
 	HWND hWnd = CreateWindow(
 		szAPPClassName,
-		TEXT("ä¿„ç¾…æ–¯æ–¹å¡Š"),
+		TEXT("«XÃ¹´µ¤è¶ô"),
 		WS_BORDER|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX,
 		300, 200,
 		490, 640,
@@ -70,13 +102,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	UpdateWindow(hWnd);
 	
 	MSG msg;
-	while(GetMessage(&msg, NULL, 0, 0) )
+	while(GetMessage(&msg, NULL, 0, 0))
 	{
 		TranslateMessage(&msg);
 		
 		DispatchMessage(&msg);
 	}
-	
 	return 0;
 }
 
@@ -96,33 +127,52 @@ LRESULT CALLBACK WindowProc(
 			OnCreate();
 			break;
 		
-		case WM_KEYDOWN:
+		case WM_KEYDOWN: //«öÁä 
 			switch(wParam)
 			{
 				case VK_RETURN:
+					Return(hWnd); 
+					break;
+				case VK_LEFT:
+					Left(hWnd);
+					break;
+				case VK_RIGHT:
+					Right(hWnd);
+					break;
+				case VK_UP:
+					Up(hWnd);
+					break;
+				case VK_DOWN:
+					Down(hWnd);
 					break;
 			}
+			break;
+		
+		case WM_TIMER: //­p®É 
+			Timer(hWnd);
+			break;
 		
 		case WM_PAINT:
-			hDC = BeginPaint(hWnd, &ps); //é¡¯ç¤ºåœ–æ¡ˆ 
+			hDC = BeginPaint(hWnd, &ps); //Åã¥Ü¹Ï®× 
 			
 			OnPaint(hDC);
 				
-			EndPaint(hWnd, &ps); //çµæŸåœ–æ¡ˆ 
+			EndPaint(hWnd, &ps); //µ²§ô¹Ï®× 
 			break;
 			
 		case WM_CLOSE:
 			DestroyWindow(hWnd);
 			break;
 		
-		case WM_DESTROY: //é—œæŽ‰æ•´å€‹exeæª” 
+		case WM_DESTROY: //Ãö±¼¾ã­ÓexeÀÉ
+			KillTimer(hWnd, DEF_TIMER1);
 			PostQuitMessage(0);
 			break;
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
-void OnPaint(HDC hDC) //é¡¯ç¤ºåœ–æ¡ˆ 
+void OnPaint(HDC hDC) //Åã¥Ü¹Ï®× 
 {
 	HDC hMemDC = CreateCompatibleDC(hDC);
 	
@@ -144,7 +194,7 @@ void DrawBlock(HDC hDC)
 	{
 		for(int j = 0; j < 10; j++)
 		{
-			if(g_arrBackground[i][j] == 1)
+			if(Background[i][j] == 1)
 			{
 				HPEN hPen = CreatePen(PS_SOLID, 1, RGB(51, 201, 255));
 				HPEN oldPen = (HPEN)SelectObject(hDC, hPen);
@@ -155,7 +205,7 @@ void DrawBlock(HDC hDC)
 				Rectangle(hDC, 	j*30+1, i*30+1, j*30+29, i*30+29);
 				SelectObject(hDC, oldBrush);
 			}
-			if(g_arrBackground[i][j] == 2)
+			if(Background[i][j] == 2)
 			{
 				HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 201, 255));
 				HPEN oldPen = (HPEN)SelectObject(hDC, hPen);
@@ -186,30 +236,44 @@ void CreateBlock()
 		case 0:
 			g_tetris[0][0] = 0, g_tetris[0][1] = 1, g_tetris[0][2] = 0, g_tetris[0][3] = 0;
 			g_tetris[1][0] = 1, g_tetris[1][1] = 1, g_tetris[1][2] = 1, g_tetris[1][3] = 0;
+			g_nLine = 0;
+			g_nList = 3;
 			break;
 		case 1:
 			g_tetris[0][0] = 0, g_tetris[0][1] = 1, g_tetris[0][2] = 1, g_tetris[0][3] = 0;
 			g_tetris[1][0] = 0, g_tetris[1][1] = 1, g_tetris[1][2] = 1, g_tetris[1][3] = 0;
+			g_nLine = 0;
+			g_nList = 3;
 			break;
 		case 2:
 			g_tetris[0][0] = 0, g_tetris[0][1] = 0, g_tetris[0][2] = 0, g_tetris[0][3] = 1;
 			g_tetris[1][0] = 0, g_tetris[1][1] = 1, g_tetris[1][2] = 1, g_tetris[1][3] = 1;
+			g_nLine = 0;
+			g_nList = 3;
 			break;
 		case 3:
 			g_tetris[0][0] = 1, g_tetris[0][1] = 0, g_tetris[0][2] = 0, g_tetris[0][3] = 0;
 			g_tetris[1][0] = 1, g_tetris[1][1] = 1, g_tetris[1][2] = 1, g_tetris[1][3] = 0;
+			g_nLine = 0;
+			g_nList = 3;
 			break;
 		case 4:
 			g_tetris[0][0] = 0, g_tetris[0][1] = 1, g_tetris[0][2] = 1, g_tetris[0][3] = 0;
 			g_tetris[1][0] = 0, g_tetris[1][1] = 0, g_tetris[1][2] = 1, g_tetris[1][3] = 1;
+			g_nLine = 0;
+			g_nList = 3;
 			break;
 		case 5:
 			g_tetris[0][0] = 0, g_tetris[0][1] = 1, g_tetris[0][2] = 1, g_tetris[0][3] = 0;
 			g_tetris[1][0] = 1, g_tetris[1][1] = 1, g_tetris[1][2] = 0, g_tetris[1][3] = 0;
+			g_nLine = 0;
+			g_nList = 3;
 			break;
 		case 6:
-			g_tetris[0][0] = 0, g_tetris[0][1] = 0, g_tetris[0][2] = 0, g_tetris[0][3] = 0;
-			g_tetris[1][0] = 1, g_tetris[1][1] = 1, g_tetris[1][2] = 1, g_tetris[1][3] = 1;
+			g_tetris[0][0] = 1, g_tetris[0][1] = 1, g_tetris[0][2] = 1, g_tetris[0][3] = 1;
+			g_tetris[1][0] = 0, g_tetris[1][1] = 0, g_tetris[1][2] = 0, g_tetris[1][3] = 0;
+			g_nLine = 0;
+			g_nList = 4;
 			break;
 	}
 } 
@@ -220,7 +284,166 @@ void Copy()
 	{
 		for(int j = 0; j < 4; j++)
 		{
-			g_arrBackground[i][j+3] = g_tetris[i][j];
+			Background[i][j+3] = g_tetris[i][j];
 		}
 	}
+}
+
+int Down1()
+{
+	for (int i = 0; i < 10; i++)
+	{
+		if (1 == Background[19][i])
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
+int Down2()
+{
+	for (int i = 19; i >= 0; i--)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (1 == Background[i][j] && 2 == Background[i + 1][j])
+			{
+				return 0;
+			}
+		}
+	}
+	return 1;
+}
+
+void Timer(HWND hWnd)
+{
+	HDC hDc = GetDC(hWnd);
+	
+	if(Down1() == 1&&Down2() == 1)
+	{
+		SqareDown();
+		g_nLine++;
+	}
+	else{
+		
+	}
+}
+
+void Return(HWND hWnd)
+{
+	SetTimer(hWnd, DEF_TIMER1, 600, NULL);
+}
+
+int Left1()
+{
+	for (int i = 0; i < 20; i++)
+	{
+		if (Background[i][0] == 1)
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
+int Left2()
+{
+	for (int i = 0; i < 20; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (Background[i][j] == 1&& Background[i][j - 1] == 2)
+			{
+				return 0;
+			}
+		}
+	}
+	return 1;
+}
+
+void SqareLeft()
+{
+	for (int i = 0; i < 20; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (1 == Background[i][j])
+			{
+				Background[i][j - 1] = Background[i][j];
+				Background[i][j] = 0;
+			}
+		}
+	}
+}
+
+void Left(HWND hWnd)
+{
+	if (1 == Left1() && 1 == Left2())
+	{
+		HDC hDc = GetDC(hWnd);
+		g_nList--;
+		SqareLeft();
+		OnPaint(hDc);
+		ReleaseDC(hWnd, hDc);
+	}
+}
+
+int Right1()
+{
+	for (int i = 0; i < 20; i++)
+	{
+		if (Background[i][19] == 1)
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
+int Right2()
+{
+	for (int i = 0; i < 20; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (Background[i][j] == 1 && Background[i][j + 1] == 2)
+			{
+				return 0;
+			}
+		}
+	}
+	return 1;
+}
+
+void SqareRight()
+{
+	for (int i = 0; i < 20; i++)
+	{
+		for (int j = 9; j >= 0; j--)
+		{
+			if (1 == Background[i][j])
+			{
+				Background[i][j + 1] = Background[i][j];
+				Background[i][j] = 0;
+			}
+		}
+	}
+}
+
+void Right(HWND hWnd)
+{
+	if (1 == Right1() && 1 == Right2())
+	{
+		HDC hDc = GetDC(hWnd);
+		g_nList++;
+		SqareRight();
+		OnPaint(hDc);
+		ReleaseDC(hWnd, hDc);
+	}
+}
+
+void Down(HWND hWnd)
+{
+	Timer(hWnd);
 }
