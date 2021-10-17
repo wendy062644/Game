@@ -206,15 +206,20 @@ void Six()
 }
 
 void Lobby(){
-	int choice = 0;
-	cout << "       選擇遊戲難度  " << endl;
-	cout << "     ----------------" << endl;
-	cout << "     |  1 簡單模式  |" << endl;
-	cout << "     |  2 普通模式  |" << endl;
-	cout << "     |  3 困難模式  |" << endl;
-	cout << "     ----------------" << endl;
-	cin >> choice;
-	switch(choice)
+	Set(4, 3);
+	cout << "  選擇遊戲難度  ";
+	Set(4, 4);
+	cout << "----------------";
+	Set(4, 5);
+	cout << "|  1 簡單模式  |";
+	Set(4, 6);
+	cout << "|  2 普通模式  |";
+	Set(4, 7);
+	cout << "|  3 困難模式  |";
+	Set(4, 8);
+	cout << "----------------";
+	int ch = getch();
+	switch(ch-48)
 	{
 		case 1:
 			game = 35;
@@ -230,7 +235,7 @@ void Lobby(){
 
 void GameOver(){
 	system("cls");
-	cout << endl << "     | Game Over |" << endl << "     |獲得分數: " << score << "|" << endl << "     |消除總數: " << tt << "|" <<  endl;
+	cout << endl << "     |  Game Over  |" << endl << "     |獲得分數: " << score << endl << "     |消除總數: " << tt <<  endl;
 }
 
 int Change()
@@ -605,12 +610,10 @@ void Print(){
 			}
 		}
 	}
-		Set(36, 8);cout << last;
-		Set(36, 9);cout << score;
-		Set(36, 10);cout << tt;
 }
 
 int main(){
+	Print();
 	Lobby();
 	Create(); 
 	Set(24, 1);cout << "  下一個方塊";
@@ -631,6 +634,9 @@ int main(){
 			check = 0;
 			}
 		Print();
+		Set(36, 8);cout << last;
+		Set(36, 9);cout << score;
+		Set(36, 10);cout << tt;
 		float time1 = 0;
 		while(1)
 		{
