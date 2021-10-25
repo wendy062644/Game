@@ -62,7 +62,7 @@ void Print(){
 		{
 			if(map[a][b] == 0){cout << "  ";}
 			else if(map[a][b] == 1){cout << "■";}
-			else if(map[a][b] == 2){cout << "  ";}
+			else{cout << "  ";}
 		}
 		cout << endl;
 	} 
@@ -136,6 +136,24 @@ void Choice1(){
 	}
 }
 
+void Skill(){
+	
+}
+
+void Ultimate(){
+	
+}
+
+void Attack()
+{
+	
+}
+
+void Heal()
+{
+	
+}
+
 void PrintHealth()
 {
 	for(int a = 0; h/25 > a; a++)
@@ -166,8 +184,8 @@ void pause(){
 	else{cout << "遊戲暫停";}
 	if(_kbhit())
 	{
-		char ch = getch();
-		switch(ch)
+		char input = getch();
+		switch(input)
 		{
 			case 32: //空白鍵，遊戲繼續
 				system("cls");
@@ -198,11 +216,29 @@ void Right(){
 			if(map[a][b] == 2){map[a][b+1] = 2; map[a][b] = 0; Set(b*2, a); cout << "  ";}
 		}
 	}
+	pl++;
 	PrintPerson();
 }
 
 void Left(){
-	
+	if(pl == 0){return;}
+	pl--;
+	for(int a = 1; 30 > a; a++)
+	{
+		for(int b = 1; 60 > b; b++)
+		{
+			if(map[a][b] == 2){if(map[a][b-1] == 1||map[a][b-1] == 3){pl++; return;}}
+		}
+	}
+	for(int a = 1; 30 > a; a++)
+	{
+		for(int b = 1; 60 > b; b++)
+		{
+			if(map[a][b] == 2){map[a][b-1] = 2; map[a][b] = 0; Set(b*2, a); cout << " ";}
+		}
+	}
+	pr++;
+	PrintPerson();
 }
 
 void Down(){
@@ -212,7 +248,7 @@ void Down(){
 int main()
 {
 	Print();
-	Sleep(100);
+	Sleep(1000);
 	Language();
 	system("cls");
 	Print();
@@ -220,7 +256,7 @@ int main()
 	else{Choice1();}
 	system("cls");
 	Print();
-	Sleep(1000);
+	Sleep(100);
 	PrintPerson();
 	PrintHealth();
 	switch (mode){
@@ -241,7 +277,7 @@ int main()
 			char ch = getch();
 			switch(ch)
 			{
-				case 32: //空白鍵，遊戲暫停
+				case 32: //ESC，遊戲暫停
 					pause();
 					break;
 				case 72: //上鍵
@@ -256,6 +292,18 @@ int main()
 				case 80: //下鍵 
 					Down();
 					break;
+				case 27: //空白建，攻擊 
+					Attack();
+					break;
+				case 81: //補血 
+					Heal();
+					break;
+				case 87: //技能 
+					Skill();
+					break;
+				case 69: //大絕招 
+					Ultimate();
+					break; 
 			}
 		}
 	}
