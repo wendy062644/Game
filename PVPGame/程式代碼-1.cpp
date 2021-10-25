@@ -48,7 +48,7 @@ int ez[5][5] = {
 int med[7][7];
 int hard[9][9];
 int pur[15][15];
-int l = 0, r = 0, h = 0, realh = 0;
+int l = 0, r = 0, h = 0, realh = 0, myh = 250, realmyh = 250;
 int pr = 53, pl = 1;
 
 void Set(int x, int y);
@@ -146,6 +146,14 @@ void PrintHealth()
 	}
 	Set(61, 3);
 	cout << realh << "/" << h;
+	for(int a = 0; myh/25 > a; a++)
+	{
+		Set(56-a*2, 2);
+		if(realmyh >= (a+1)*25){cout << "■";}
+		else{cout << "□";}
+	}
+	Set(49, 3);
+	cout << realmyh << "/" << myh;
 }
 
 void pause(){
