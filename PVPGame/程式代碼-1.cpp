@@ -182,7 +182,7 @@ void pause(){
 		cout << "- PAUSE -";
 	}
 	else{cout << "遊戲暫停";}
-	if(_kbhit())
+	while(1)
 	{
 		char input = getch();
 		switch(input)
@@ -245,6 +245,20 @@ void Down(){
 	
 }
 
+void PrintBoss(){
+	switch (mode){
+		case 1:
+		for(int a = 24; 30 > a; a++)
+		{
+			for(int b = l; l+5 > b; b++)
+			{
+				if(ez[a-24][b-l] == 1){map[a][b] = 3; Set(b*2, a);cout << "*";}
+			}
+		}
+		break;
+	}
+}
+
 int main()
 {
 	Print();
@@ -259,17 +273,7 @@ int main()
 	Sleep(100);
 	PrintPerson();
 	PrintHealth();
-	switch (mode){
-		case 1:
-		for(int a = 24; 30 > a; a++)
-		{
-			for(int b = l; l+5 > b; b++)
-			{
-				if(ez[a-24][b-l] == 1){map[a][b] = 3; Set(b*2, a);cout << "*";}
-			}
-		}
-		break;
-	}
+	PrintBoss();
 	while(1)
 	{
 		if(_kbhit())
@@ -279,6 +283,9 @@ int main()
 			{
 				case 32: //ESC，遊戲暫停
 					pause();
+					PrintPerson();
+					PrintHealth();
+					PrintBoss();
 					break;
 				case 72: //上鍵
 					Up();
