@@ -3,6 +3,7 @@
 #include<conio.h>
 #include<stdlib.h>
 #include <cstdlib> 
+#include <math.h>
 using namespace std;
 void PrintPerson();
 int map[30][60] = {
@@ -54,6 +55,7 @@ int pr = 53, pl = 1;
 void Set(int x, int y);
 bool lang = 0;
 int mode = 0;
+void PrintHealth();
 
 void Print(){
 	for(int a = 0; 30 > a; a++)
@@ -146,7 +148,21 @@ void Ultimate(){
 
 void Attack()
 {
-	
+	int n = 0;
+	map[r+n][1] = 5;
+	while(1)
+	{
+		n++;
+		if(r+n == 60){Set((pr+n)*2, 25); cout << "  "; return;}
+		if(map[25][pr+n] == 3){realh -= 5; Set((pr+n)*2, 25); cout << "  "; PrintHealth(); return;}
+		Set((pr+n)*2, 25);
+		cout << "O ";
+		Set((pr+n-1)*2, 25);
+		cout << "  ";
+		map[5][pr+n-1] = 0;
+		map[5][pr+n] = 5;
+		Sleep(30);
+	}
 }
 
 void Heal()
@@ -163,6 +179,10 @@ void PrintHealth()
 		else{cout << "□";}
 	}
 	Set(61, 3);
+	for(int a = 0; (int)log(h)-(int)log(realh) > a; a++)
+	{
+		cout << " ";
+	}
 	cout << realh << "/" << h;
 	for(int a = 0; myh/25 > a; a++)
 	{
@@ -171,6 +191,10 @@ void PrintHealth()
 		else{cout << "□";}
 	}
 	Set(49, 3);
+	for(int a = 0; myh/10-realmyh/10 > a; a++)
+	{
+		cout << "  ";
+	}
 	cout << realmyh << "/" << myh;
 }
 
@@ -180,8 +204,13 @@ void pause(){
 	Set(56, 11);
 	if(lang){
 		cout << "- PAUSE -";
+		Set(49, 13);
+		cout << "Press space to continue";
 	}
-	else{cout << "遊戲暫停";}
+	else{cout << "遊戲暫停";
+		Set(54, 13);
+		cout << "按空白鍵繼續";
+	}
 	while(1)
 	{
 		char input = getch();
@@ -281,7 +310,7 @@ int main()
 			char ch = getch();
 			switch(ch)
 			{
-				case 32: //ESC，遊戲暫停
+				case 27: //ESC，遊戲暫停
 					pause();
 					PrintPerson();
 					PrintHealth();
@@ -299,7 +328,7 @@ int main()
 				case 80: //下鍵 
 					Down();
 					break;
-				case 27: //空白建，攻擊 
+				case 32: //空白建，攻擊 
 					Attack();
 					break;
 				case 81: //補血 
