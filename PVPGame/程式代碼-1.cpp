@@ -170,7 +170,7 @@ void PrintHealth()
 		else{cout << "□";}
 	}
 	Set(61, 3);
-	for(int a = 0; (int)log(h)-(int)log(realh) > a; a++)
+	for(int a = 0; (int)log10(h)-(int)log10(realh) > a; a++)
 	{
 		cout << " ";
 	}
@@ -182,9 +182,9 @@ void PrintHealth()
 		else{cout << "□";}
 	}
 	Set(49, 3);
-	for(int a = 0; myh/10-realmyh/10 > a; a++)
+	for(int a = 0; (int)log10(myh)-(int)log10(realmyh) > a; a++)
 	{
-		cout << "  ";
+		cout << " ";
 	}
 	cout << realmyh << "/" << myh;
 }
@@ -312,7 +312,7 @@ int main()
 	while(1)
 	{
 		if(AttackNum){AttackKeep();}
-		int times = 10;
+		int times = 5;
 		while(times--)
 		{
 			if(_kbhit())
@@ -352,7 +352,7 @@ int main()
 						break; 
 				}
 			}
-			Sleep(3);
+			Sleep(1);
 		}
 	}
 }
