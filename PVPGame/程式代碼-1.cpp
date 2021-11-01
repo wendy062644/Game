@@ -166,11 +166,11 @@ void PrintHealth()
 	for(int a = 0; h/25 > a; a++)
 	{
 		Set(60+a*2, 2);
-		if(realh >= (a+1)*25){cout << "■";}
+		if(realh >= (a)*25){cout << "■";}
 		else{cout << "□";}
 	}
 	Set(61, 3);
-	for(int a = 0; (int)log10(h)-(int)log10(realh) > a; a++)
+	for(int a = 0; (int)log10(abs(h))-(int)log10(abs(realh)) > a; a++)
 	{
 		cout << " ";
 	}
@@ -178,11 +178,11 @@ void PrintHealth()
 	for(int a = 0; myh/25 > a; a++)
 	{
 		Set(56-a*2, 2);
-		if(realmyh >= (a+1)*25){cout << "■";}
+		if(realmyh >= (a)*25){cout << "■";}
 		else{cout << "□";}
 	}
 	Set(49, 3);
-	for(int a = 0; (int)log10(myh)-(int)log10(realmyh) > a; a++)
+	for(int a = 0; (int)log10(abs(myh))-(int)log10(abs(realmyh)) > a; a++)
 	{
 		cout << " ";
 	}
@@ -312,7 +312,7 @@ int main()
 	while(1)
 	{
 		if(AttackNum){AttackKeep();}
-		int times = 5;
+		int times = 3;
 		while(times--)
 		{
 			if(_kbhit())
