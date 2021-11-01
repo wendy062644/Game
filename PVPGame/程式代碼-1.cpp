@@ -51,6 +51,7 @@ int hard[9][9];
 int pur[15][15];
 int l = 0, r = 0, h = 0, realh = 0, myh = 250, realmyh = 250;
 int pr = 53, pl = 1;
+int AttackNum = 0;
 
 void Set(int x, int y);
 bool lang = 0;
@@ -149,20 +150,10 @@ void Ultimate(){
 void Attack()
 {
 	int n = 0;
-	map[r+n][1] = 5;
-	while(1)
-	{
-		n++;
-		if(r+n == 60){Set((pr+n)*2, 25); cout << "  "; return;}
-		if(map[25][pr+n] == 3){realh -= 5; Set((pr+n)*2, 25); cout << "  "; PrintHealth(); return;}
-		Set((pr+n)*2, 25);
-		cout << "O ";
-		Set((pr+n-1)*2, 25);
-		cout << "  ";
-		map[5][pr+n-1] = 0;
-		map[5][pr+n] = 5;
-		Sleep(30);
-	}
+	map[25][pl+6] = 5;
+	AttackNum++;
+	Set((pl+6)*2, 25);
+	cout << "O ";
 }
 
 void Heal()
@@ -288,6 +279,21 @@ void PrintBoss(){
 	}
 }
 
+void AttackKeep()
+{
+	for(int a = 59; a > 1; a--)
+	{
+		for(int b = 3; 29 > b; b++)
+		{
+			if(map[b][a] == 5){
+				if(map[b][a+1] == 3){map[b][a] = 0; AttackNum--; realh = realh -5; Set(a*2, b); cout << "  "; PrintHealth();}
+				else if(a == 59){map[b][a] = 0; Set(a*2, b); cout << "  ";}
+				else{map[b][a] = 0; map[b][a+1] = 5; Set(a*2, b); cout << "  O ";}
+			}
+		}
+	}
+}
+
 int main()
 {
 	Print();
@@ -305,42 +311,48 @@ int main()
 	PrintBoss();
 	while(1)
 	{
-		if(_kbhit())
+		if(AttackNum){AttackKeep();}
+		int times = 10;
+		while(times--)
 		{
-			char ch = getch();
-			switch(ch)
+			if(_kbhit())
 			{
-				case 27: //ESC，遊戲暫停
-					pause();
-					PrintPerson();
-					PrintHealth();
-					PrintBoss();
-					break;
-				case 72: //上鍵
-					Up();
-					break;
-				case 75: //左鍵 
-					Left();
-					break;
-				case 77: //右鍵 
-					Right();
-					break;
-				case 80: //下鍵 
-					Down();
-					break;
-				case 32: //空白建，攻擊 
-					Attack();
-					break;
-				case 81: //補血 
-					Heal();
-					break;
-				case 87: //技能 
-					Skill();
-					break;
-				case 69: //大絕招 
-					Ultimate();
-					break; 
+				char ch = getch();
+				switch(ch)
+				{
+					case 27: //ESC，遊戲暫停
+						pause();
+						PrintPerson();
+						PrintHealth();
+						PrintBoss();
+						break;
+					case 72: //上鍵
+						Up();
+						break;
+					case 75: //左鍵 
+						Left();
+						break;
+					case 77: //右鍵 
+						Right();
+						break;
+					case 80: //下鍵 
+						Down();
+						break;
+					case 32: //空白建，攻擊 
+						Attack();
+						break;
+					case 81: //補血 
+						Heal();
+						break;
+					case 87: //技能 
+						Skill();
+						break;
+					case 69: //大絕招 
+						Ultimate();
+						break; 
+				}
 			}
+			Sleep(3);
 		}
 	}
 }
